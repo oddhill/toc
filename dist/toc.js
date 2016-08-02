@@ -2,7 +2,7 @@
  * toc - jQuery Table of Contents Plugin
  * v0.3.2
  * http://projects.jga.me/toc/
- * copyright Greg Allen 2014
+ * copyright Greg Allen 2016
  * MIT License
 */
 /*!
@@ -71,6 +71,9 @@ $.fn.toc = function(options) {
       e.preventDefault();
       var elScrollTo = $(e.target).attr('href');
 
+      // `scrollToOffset` could be a function
+      opts.offset = jQuery.isFunction(options.scrollToOffset) ? options.scrollToOffset() : options.scrollToOffset;
+
       opts.smoothScrolling(elScrollTo, opts, callback);
     }
     $('li', self).removeClass(activeClassName);
@@ -86,7 +89,7 @@ $.fn.toc = function(options) {
     timeout = setTimeout(function() {
       var top = $(window).scrollTop(),
         highlighted, closest = Number.MAX_VALUE, index = 0;
-      
+
       for (var i = 0, c = headingOffsets.length; i < c; i++) {
         var currentClosest = Math.abs(headingOffsets[i] - top);
         if (currentClosest < closest) {
@@ -94,10 +97,10 @@ $.fn.toc = function(options) {
           closest = currentClosest;
         }
       }
-      
+
       $('li', self).removeClass(activeClassName);
       highlighted = $('li:eq('+ index +')', self).addClass(activeClassName);
-      opts.onHighlight(highlighted);      
+      opts.onHighlight(highlighted);
     }, 50);
   };
   if (opts.highlightOnScroll) {
@@ -169,19 +172,19 @@ jQuery.fn.toc.defaults = {
     var candidateId = $(heading).text().replace(/[^a-z0-9]/ig, ' ').replace(/\s+/g, '-').toLowerCase();
     if (verboseIdCache[candidateId]) {
       var j = 2;
-      
+
       while(verboseIdCache[candidateId + j]) {
         j++;
       }
       candidateId = candidateId + '-' + j;
-      
+
     }
     verboseIdCache[candidateId] = true;
 
     return prefix + '-' + candidateId;
   },
   headerText: function(i, heading, $heading) {
-    return $heading.text();
+    return $heading.data('toc-title') || $heading.text();
   },
   itemClass: function(i, heading, $heading, prefix) {
     return prefix + '-' + $heading[0].tagName.toLowerCase();
