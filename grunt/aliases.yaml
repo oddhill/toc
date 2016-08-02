@@ -1,7 +1,6 @@
 test:
   - jshint:test
   #- jscs:test
-  - mocha
 lib:
   - jshint:lib
   #- jscs:lib
