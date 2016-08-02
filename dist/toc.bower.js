@@ -103,7 +103,7 @@ jQuery.fn.toc.defaults = {
   selectors: 'h1,h2,h3',
   smoothScrolling: function(target, options, callback) {
     $(target).smoothScroller({
-      offset: options.scrollToOffset
+      offset: options.offset
     }).on('smoothScrollerComplete', function() {
       callback();
     });
